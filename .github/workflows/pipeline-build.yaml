@@ -68,12 +68,12 @@ jobs:
   - name: Pull PHP image
     run: sudo docker pull php:8.2-cli
 
-  - name: Create Dockerfile
-    run: |
-    echo "FROM php:7.0-apache" > Dockerfile
-    echo "COPY ./code /var/www/html" >> Dockerfile
-    echo "EXPOSE 80" >> Dockerfile
-    shell: bash
+ # - name: Create Dockerfile
+  #  run: |
+   # echo "FROM php:7.0-apache" > Dockerfile
+    #echo "COPY ./code /var/www/html" >> Dockerfile
+    #echo "EXPOSE 80" >> Dockerfile
+    #shell: bash
 
   - name: copy code into image
     run: sudo docker build -t prueba .
