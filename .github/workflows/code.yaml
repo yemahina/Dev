@@ -8,11 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
-
+   
     steps:
     - name: Pull PHP image
       run: sudo docker pull php:8.2-cli
