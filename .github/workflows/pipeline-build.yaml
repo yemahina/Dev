@@ -13,7 +13,7 @@ jobs:
       actions: read
       contents: read
 
-    steps:
+    |steps:
       - name: "Obteniendo ultima version del codigo"
         uses: actions/checkout@v3
 
@@ -42,6 +42,7 @@ jobs:
 
       - name: "Verificar reporte"
         run: ls -ltra reports
+
 
 #name: "Creacion de imagen Docker"
 #on: 
