@@ -20,10 +20,15 @@ jobs:
           echo "COPY ./code /var/www/html" >> Dockerfile
           echo "EXPOSE 80" >> Dockerfile
 
+      - name: busca Dockerfile
+        run: find . -name Dockerfile
+
       - name: copy code into image
-        run: sudo docker build -t prueba .
+        run: sudo docker build -t prueba -f $(find . -name Dockerfile) .
 
       - name: list Docker images
         run: sudo docker images
+
+
 
     
