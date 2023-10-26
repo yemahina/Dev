@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  integration:
+  build:
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -24,10 +24,10 @@ jobs:
     echo "EXPOSE 80" >> Dockerfile
     shell: bash
 
-    - name: copy code into image
-      run: sudo docker build -t prueba .
+  - name: copy code into image
+    run: sudo docker build -t prueba .
 
-    - name: list Docker images
+  - name: list Docker images
     run: sudo docker images
 
 
