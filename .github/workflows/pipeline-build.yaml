@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  integration:
     runs-on: ubuntu-latest
     permissions:
       security-events: write
@@ -14,12 +14,63 @@ jobs:
       contents: read
 
     steps:
-    - name: Pull PHP image
-      run: sudo docker pull php:8.2-cli
+      - name: "Obteniendo ultima version del codigo"
+        uses: actions/checkout@v3
+
+      - name: "Instalacion Java"
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: "Compilacion"
+        run: ./mvnw clean install
+
+      - name: "Verificar paquete"
+        run: ls -ltra target
+
+      - name: "Dependency Check"
+        uses: dependency-check/Dependency-Check_Action@main
+        env:
+          JAVA_HOME: /opt/jdk
+        id: Depcheck
+        with:
+          project: 'WebGoat'
+          path: '.'
+          format: 'HTML'
+          out: 'reports'
+
+      - name: "Verificar reporte"
+        run: ls -ltra reports
+
+#name: "Creacion de imagen Docker"
+#on: 
+ # push:
+  #  branches:
+   # - main#
+#jobs: 
+ # build:
+  #  run: ubuntu-latest
+    
+   # steps: 
+    #- name: Checkout code
+     # uses: actions/checkout@v2
+
+    #- name: Build Docker image
+     # run:  docker build -t my-docker-image:latest . 
+
+    #- name: Login to Docker image
+     # run:  docker login -u ${{ secrets.DOCKER_USERNAME}} -P ${{secrets.DOCKER_PASSWORD}}
+
+    #- name: Push Docker image
+     # run:  docker push my-dcker-image:latest
+
+  - name: Pull PHP image
+    run: sudo docker pull php:8.2-cli
 
   - name: Create Dockerfile
     run: |
-   echo "FROM php:7.0-apache" > Dockerfile
+    echo "FROM php:7.0-apache" > Dockerfile
     echo "COPY ./code /var/www/html" >> Dockerfile
     echo "EXPOSE 80" >> Dockerfile
     shell: bash
@@ -28,7 +79,7 @@ jobs:
     run: sudo docker build -t prueba .
 
   - name: list Docker images
-    run: sudo docker images
+  run: sudo docker images
 
 
         
