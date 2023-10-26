@@ -8,10 +8,7 @@ on:
 jobs:
   integration:
     runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
+   
 
     steps:
       - name: "Obteniendo ultima version del codigo"
