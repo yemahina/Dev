@@ -52,11 +52,13 @@ jobs:
          docker build -f Dockerfile . -t webgoat/test
          docker images
 
+      - name: "Instalar Trivy"
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb
+          sudo dpkg -i trivy_0.18.3_Linux-64bit.deb
+  
       - name: "evaluar la imagen"
-        run:  |
-        wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb 
-        sudo dpkg -i trivy_0.18.3_Linux-64bit.deb
-        trivy image --exit-code 1 webgoat/test
+        run: trivy image --exit-code 1 webgoat/test
 
       - name: "Crear y ejecutar contenedor Docker"
         run: |
