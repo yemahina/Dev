@@ -56,8 +56,15 @@ jobs:
         run: |
           docker run -d -p 8080:80 webgoat/test
 
+      - name: "comoartir imagen"
+        run: |
+        docker login
+        docker push webgoat/test:latest
+
       - name: "Confirmación de finalización"
         run: echo "El flujo de trabajo se ha completado con éxito."
+      
+
 
 
 
