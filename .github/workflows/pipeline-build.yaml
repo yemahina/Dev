@@ -63,7 +63,7 @@ jobs:
         with:
           image-ref: ${{ steps.integration.outputs.image_name }}
           format: 'table'
-          exit-code: '0'
+          exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
@@ -88,6 +88,8 @@ jobs:
 
       - name: "Confirmación de finalización"
         run: echo "El flujo de trabajo se ha completado con éxito."
+
+        
 
 
  
