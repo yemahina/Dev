@@ -58,7 +58,6 @@ jobs:
 
       - name: "comoartir imagen"
         run: |
-        docker login
         docker push webgoat/test:latest
 
       - name: "Confirmación de finalización"
