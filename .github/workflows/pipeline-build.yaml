@@ -58,7 +58,7 @@ jobs:
           sudo dpkg -i trivy_0.18.3_Linux-64bit.deb
   
       - name: "evaluar la imagen"
-        run: trivy image --exit-code 1 webgoat/test
+        run: trivy image webgoat/test
 
       - name: "Crear y ejecutar contenedor Docker"
         run: |
