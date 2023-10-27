@@ -50,9 +50,7 @@ jobs:
       - name: "Generación de imagen de docker"
         run: |
         sudo docker build -f Dockerfile . -t webgoat/test
-        
-      - name: list Docker images
-        run: sudo docker images
+        sudo docker images
 
 
         
