@@ -51,10 +51,14 @@ jobs:
         run: |
          docker build -f Dockerfile . -t webgoat/test
          docker images
-         
+
       - name: "Crear y ejecutar contenedor Docker"
         run: |
           docker run -d -p 8080:80 webgoat/test
+
+      - name: "Confirmación de finalización"
+        run: echo "El flujo de trabajo se ha completado con éxito."
+
 
 
         
