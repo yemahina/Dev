@@ -81,6 +81,22 @@ jobs:
 
       - name: "Confirmación de finalización"
         run: echo "El flujo de trabajo se ha completado con éxito."
+
+         - name: "Construir imagen Docker desde Dockerfile"
+        run: |
+          IMAGE_NAME="docker.io/my-organization/my-app:${GITHUB_SHA}"
+          docker build -t $IMAGE_NAME .
+          echo "Image Reference: $IMAGE_NAME"
+
+      - name: "Ejecutar escáner de vulnerabilidades Trivy"
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ steps.integration.outputs.image_name }}
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
       
 
 
