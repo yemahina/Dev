@@ -52,11 +52,6 @@ jobs:
           IMAGE_NAME="docker.io/my-organization/my-app:${{ github.sha }}"
           docker build -f Dockerfile -t $IMAGE_NAME .
           echo "Image Reference: $IMAGE_NAME"
-
-      - name: "Instalar Trivy"
-        run: |
-          wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb
-          sudo dpkg -i trivy_0.18.3_Linux-64bit.deb
       
       - name: "Ejecutar escáner de vulnerabilidades Trivy"
         uses: aquasecurity/trivy-action@master
@@ -67,7 +62,7 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-          continue-on-error: true
+        continue-on-error: true
       
       - name: "Crear y ejecutar contenedor Docker"
         run: |
@@ -104,7 +99,7 @@ jobs:
         run: IP=$(docker inspect WebGoat | grep "IPAddress" | tail -1 | cut -d '"' -f 4)
  
       - name: "Ejecuta Arachni"
-        run: ./arachni-1.6.1.3-0.6.1.1/bin/arachni --check=*http://$IP:8080/WebGoat/login
+        run: ./arachni-1.6.1.3-0.6.1.1/bin/arachni --check=* http://$IP:8080/WebGoat/login
  
 
         
