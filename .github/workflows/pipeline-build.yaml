@@ -56,16 +56,14 @@ jobs:
         run: |
           wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb
           sudo dpkg -i trivy_0.18.3_Linux-64bit.deb
-  
-      - name: "evaluar la imagen"
-        run: trivy image webgoat/test
+
+      - name: "Escanear la imagen Docker con Trivy"
+        run: |
+          trivy image webgoat/test
 
       - name: "Crear y ejecutar contenedor Docker"
         run: |
           docker run -d -p 8080:80 webgoat/test
-
-      - name: "Esperar a que el contenedor se inicie"
-        run: sleep 10
 
       - name: "Verificar estado del contenedor"
         run: docker ps | grep webgoat/test
