@@ -49,47 +49,32 @@ jobs:
 
       - name: "Generación de imagen de docker"
         run: |
-         docker build -f Dockerfile . -t webgoat/test
-         docker images
+          IMAGE_NAME="docker.io/my-organization/my-app:${{ github.sha }}"
+          docker build -f Dockerfile -t $IMAGE_NAME .
+          echo "Image Reference: $IMAGE_NAME"
 
       - name: "Instalar Trivy"
         run: |
           wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb
           sudo dpkg -i trivy_0.18.3_Linux-64bit.deb
-
-        - name: "Construir imagen Docker desde Dockerfile"
-        run: |
-          IMAGE_NAME="docker.io/my-organization/my-app:${GITHUB_SHA}"
-          docker build -t $IMAGE_NAME .
-          echo "Image Reference: $IMAGE_NAME"
-
-      - name: "Ejecutar escáner de vulnerabilidades Trivy"
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ steps.integration.outputs.image_name }}
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
-
+      
       - name: "Escanear la imagen Docker con Trivy"
         run: |
-          trivy image webgoat/test
-
+          trivy image $IMAGE_NAME
+      
       - name: "Crear y ejecutar contenedor Docker"
         run: |
-          docker run -d -p 8080:80 webgoat/test
+          docker run -d -p 8080:80 $IMAGE_NAME
       
       - name: "Esperar a que el contenedor se inicie"
         run: sleep 10
 
       - name: "Verificar estado del contenedor"
-        run: docker ps | grep webgoat/test
+        run: docker ps | grep $IMAGE_NAME
 
       - name: "Manejo de errores si el contenedor no se encuentra"
         run: |
-          if ! docker ps | grep -q webgoat/test; then
+          if ! docker ps | grep -q $IMAGE_NAME; then
             echo "Error: El contenedor no se ha creado correctamente."
             exit 1
           fi
