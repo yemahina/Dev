@@ -88,12 +88,10 @@ jobs:
 
       - name: "Confirmación de finalización"
         run: echo "El flujo de trabajo se ha completado con éxito."
-
-      - name: "Arachni"
-        run:  
       
       - name: "contenedor"
         run: sudo docker run -it -p 127.0.0.1:8080:8080 -p 127.0.0.1:9090:9090 webgoat/webgoat
+
       - name: "contenedor2"
         run: docker run --name webgoat -d -p 8080:8080 -p 9090:9090 webgoat/webgoat
 
@@ -108,10 +106,7 @@ jobs:
       - name: "Ejecuta Arachni"
         run: ./arachni-1.6.1.3-0.6.1.1/bin/arachni --check=*http://$IP:8080/WebGoat/login
  
-      - name: "Crear Contenedor"
-        run: |
-          docker container stop WebGoat
-          docker container rm WebGoat
+
         
 
 
