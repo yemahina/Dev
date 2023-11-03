@@ -48,10 +48,14 @@ jobs:
           docker tag webgoat:latest public.ecr.aws/n3j7o1e0/yemaecr:latest
           docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
 
-      - name: "instalar terraform"
+      - name: "Aprovisionamiento de terraform"
         run: |
           terraform init
           terraform validate 
           terraform plan
           terraform apply
           terraform destroy
+        
+      - name: "Aprovisionamiento de terraform"
+        run: |
+          ansible-playbook -i inventario server.yml --become
