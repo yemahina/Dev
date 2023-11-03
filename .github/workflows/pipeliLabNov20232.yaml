@@ -64,7 +64,7 @@ jobs:
 
       - name: "Ejecutar Ansible"
         env:
-          PRIVATE_KEY: ${{ YEMALABNOV2023AWS_PEM }}
+          PRIVATE_KEY: ${{ secrets.YEMALABNOV2023AWS_PEM }}
         run: |
           sudo apt update
           sudo apt install -y ansible
@@ -91,6 +91,6 @@ jobs:
           terraform plan -destroy -out tfplan
           terraform apply tfplan
           terraform destroy
-          
+
 
 
