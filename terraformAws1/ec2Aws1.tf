@@ -12,7 +12,7 @@ resource "aws_instance" "my_instance2" {
     Name = "yema_Instance"
   }
 
-  security_groups = [aws_security_group.my_security_group2.id]
+  security_groups = [aws_security_group.my_security_groupY.id]
   subnet_id = "subnet-04ce466f"
 }
 
@@ -20,8 +20,8 @@ output "My_ip"{
         value = aws_instance.my_instance2.public_ip
 }
 
-resource "aws_security_group" "my_security_group2" {
-  name        = "my_security_group2"
+resource "aws_security_group" "my_security_groupY" {
+  name        = "my_security_groupY"
   description = "Security group for SSH and HTTP access"
   vpc_id = "vpc-c2c3a2a9"
 
@@ -51,4 +51,3 @@ resource "aws_security_group" "my_security_group2" {
     create_before_destroy = true
   }
 }
-
