@@ -46,8 +46,8 @@ jobs:
         uses: abhilash1in/aws-secrets-manager-action@v2.1.0
         with:
           secrets: |
-            my_secret_1
-            my_secret_2
+            "$YEMALABNOV2023AWS_ACCESS_KEY_ID"
+            "$YEMALABNOV2023AWS_SECRET_ACCESS_KEY"
           parse-json: true
 
       - name: Check if env variable is set after fetching secrets
