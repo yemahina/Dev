@@ -55,7 +55,7 @@ jobs:
         
       - name: "Ejecutar Ansible"
         run: |
-          cd ansibleAws
+          cd ansibleAws1
           ansible-playbook -i inventario serverAws.yml --become
 
       - name: "Instalar Arachni"

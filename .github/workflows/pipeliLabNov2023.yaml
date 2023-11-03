@@ -64,12 +64,12 @@ jobs:
 
       - name: "Ejecutar Ansible"
         env:
-          PRIVATE_KEY_PEM: ${{ YEMALABNOV2023AWS_PEM }}
+          PRIVATE_KEY: ${{ YEMALABNOV2023AWS_PEM }}
         run: |
           sudo apt update
           sudo apt install -y ansible
           cd ansibleAws
-          echo "$PRIVATE_KEY_PEM" >> $HOME/key.pem
+          echo "$PRIVATE_KEY" >> $HOME/key.pem
           sudo chmod 600 $HOME/key.pem
           export ANSIBLE_HOST_KEY_CHECKING=False
           ansible-playbook -i inventario serverAws.yml --become
