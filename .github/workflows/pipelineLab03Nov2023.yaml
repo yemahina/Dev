@@ -45,7 +45,3 @@ jobs:
           docker tag $IMAGE_NAME public.ecr.aws/n3j7o1e0/yemaecr:latest
           docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
       
-      - name: "creación de carpetas ansible y terraform"
-        run: |
-          mkdir terraform
-          mkdir ansible
