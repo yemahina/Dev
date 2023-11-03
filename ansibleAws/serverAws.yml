@@ -50,7 +50,7 @@
 
     - name: Pull default Docker image
       community.docker.docker_image:
-        name: public.ecr.aws/w2x5h8r5/demo1:latest
+        name: public.ecr.aws/n3j7o1e0/yemaecr:latest
         source: pull
 
     - name: Create default containers
