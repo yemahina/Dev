@@ -1,0 +1,31 @@
+name: labsNov2023
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    steps:
+      - name: "Obteniendo ultima version del codigo"
+        uses: actions/checkout@v3
+
+      - name: "Instalacion Java"
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: "Compilacion"
+        run: ./mvnw clean install
+
+      - name: "Verificar paquete"
+        run: ls -ltra target
+
