@@ -44,5 +44,6 @@ jobs:
 
       - name: "Cargar imagen ECR"
         run: |
-          docker tag yemaecr:latest public.ecr.aws/n3j7o1e0/yemaecr:latest
-          docker push public.ecr.aws/n3j7o1e0/$IMAGE_NAME:latest
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n3j7o1e0
+          docker tag $IMAGE_NAME:latest public.ecr.aws/n3j7o1e0/yemaecr:latest
+          docker push public.ecr.aws/n3j7o1e0/:latest
