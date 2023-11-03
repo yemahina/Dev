@@ -23,11 +23,11 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
-  #    - name: "Compilacion"
-   #     run: ./mvnw clean install
+      - name: "Compilacion"
+        run: ./mvnw clean install
 
-   #   - name: "Verificar paquete"
-    #    run: ls -ltra target
+      - name: "Verificar paquete"
+        run: ls -ltra target
       
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
