@@ -28,19 +28,19 @@ jobs:
 
       - name: "Verificar paquete"
         run: ls -ltra target
-
-      - name: "Generación de imagen de docker"
-        run: |
-          IMAGE_NAME="docker.io/my-organization/my-app:${{ github.sha }}"
-          docker build -f Dockerfile -t $IMAGE_NAME .
-          echo "Image Reference: $IMAGE_NAME"
-
+      
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.YEMALABNOV2023AWS_ACCESS_KEY_ID}}
           aws-secret-access-key: ${{ secrets.YEMALABNOV2023AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
+
+      - name: "Generación de imagen de docker"
+        run: |
+          IMAGE_NAME="docker.io/my-organization/my-app:${{ github.sha }}"
+          docker build -f Dockerfile -t $IMAGE_NAME .
+          echo "Image Reference: $IMAGE_NAME"
 
       - name: "Cargar imagen ECR"
         run: |
