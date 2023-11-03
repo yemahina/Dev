@@ -59,6 +59,7 @@ jobs:
           jq -r '.ips[].ip' ip_output.json > ips.txt
           cat ips.txt
           ip=$(cat ips.txt)
+          sed -i "s/IP/$ip/g" ../ansibleAws/inventario
 
 
       - name: "Ejecutar Ansible"
