@@ -40,7 +40,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.YEMALABNOV2023AWS_ACCESS_KEY_ID}}
           aws-secret-access-key: ${{ secrets.YEMALABNOV2023AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.US_EAST_2 }}
+          aws-region: ${{ secrets.us-east-2 }}
 
       - name: Read secrets from AWS Secrets Manager into environment variables
         uses: abhilash1in/aws-secrets-manager-action@v2.1.0
