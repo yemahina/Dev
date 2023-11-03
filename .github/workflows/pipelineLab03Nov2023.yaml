@@ -71,7 +71,7 @@ jobs:
  
       - name: "Destrucción"
         run: |
-          cd terraformAws
+          cd terraformAws1
           terraform plan -destroy -out tfplan
           terraform apply tfplan
           terraform destroy
