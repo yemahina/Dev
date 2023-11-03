@@ -55,6 +55,8 @@ jobs:
           terraform validate 
           terraform plan -out tfplan
           terraform apply tfplan
+          sudo apt-get update
+          sudo apt-get install jq
           terraform output -json My_ip > ip_output.json
           jq -r '.ips[].ip' ip_output.json > ips.txt
           cat ips.txt
