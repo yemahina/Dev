@@ -41,9 +41,6 @@ jobs:
           IMAGE_NAME="docker.io/my-organization/my-app:${{ github.sha }}"
           docker build -f Dockerfile -t $IMAGE_NAME .
           echo "Image Reference: $IMAGE_NAME"
-
-      - name: "Cargar imagen ECR"
-        run: |
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n3j7o1e0
           docker tag $IMAGE_NAME public.ecr.aws/n3j7o1e0/yemaecr:latest
           docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
