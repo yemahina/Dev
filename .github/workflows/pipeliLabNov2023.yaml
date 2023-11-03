@@ -48,6 +48,13 @@ jobs:
           docker tag webgoat:latest public.ecr.aws/n3j7o1e0/yemaecr:latest
           docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
 
+      - name: "creación de carpetas ansible y terraform"
+        run: |
+          mkdir terraform
+          nano ec2.tf
+          mkdir ansible
+          nano inventario
+
       - name: "instalar terraform"
         run: |
           terraform init

@@ -1,4 +1,4 @@
-name: labsNov2023
+name: labsNov20231
 
 on:
   push:
@@ -36,11 +36,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.YEMALABNOV2023AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: "creación de carpetas ansible y terraform"
-        run: |
-          mkdir terraform
-          mkdir ansible
-
       - name: "Generación de imagen de docker y carga de imagen ECR"
         run: |
           IMAGE_NAME="docker.io/my-organization/my-app:${{ github.sha }}"
@@ -50,4 +45,7 @@ jobs:
           docker tag $IMAGE_NAME public.ecr.aws/n3j7o1e0/yemaecr:latest
           docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
       
-
+      - name: "creación de carpetas ansible y terraform"
+        run: |
+          mkdir terraform
+          mkdir ansible
