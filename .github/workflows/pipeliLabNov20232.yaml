@@ -26,8 +26,8 @@ jobs:
   #    - name: "Compilacion"
    #     run: ./mvnw clean install
 
-      - name: "Verificar paquete"
-        run: ls -ltra target
+   #   - name: "Verificar paquete"
+    #    run: ls -ltra target
       
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -93,6 +93,7 @@ jobs:
           terraform plan -destroy -out tfplan
           terraform apply tfplan
           terraform destroy
+
 
 
 
