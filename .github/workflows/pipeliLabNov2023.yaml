@@ -1,0 +1,49 @@
+name: labsNov2023
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    steps:
+      - name: "Obteniendo ultima version del codigo"
+        uses: actions/checkout@v3
+
+      - name: "Instalacion Java"
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: "Compilacion"
+        run: ./mvnw clean install
+
+      - name: "Verificar paquete"
+        run: ls -ltra target
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.YEMALABNOV2023AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{ secrets.YEMALABNOV2023AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: "Generación de imagen de docker"
+        run: |
+          docker build -f Dockerfile . -t webgoat
+          docker images
+ 
+
+      - name: "Cargar imagen ECR"
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n3j7o1e0
+          docker tag webgoat:latest public.ecr.aws/n3j7o1e0/yemaecr:latest
+          docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
