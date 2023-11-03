@@ -36,7 +36,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.YEMALABNOV2023AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: "Generación de imagen de docker"
+      - name: "Generación de imagen de docker y carga de imagen ECR"
         run: |
           IMAGE_NAME="docker.io/my-organization/my-app:${{ github.sha }}"
           docker build -f Dockerfile -t $IMAGE_NAME .

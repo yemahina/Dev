@@ -1,4 +1,4 @@
-name: labs03Nov2023
+name: labs03Nov20232
 
 on:
   push:
@@ -47,3 +47,11 @@ jobs:
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n3j7o1e0
           docker tag webgoat:latest public.ecr.aws/n3j7o1e0/yemaecr:latest
           docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
+
+      - name: "instalar terraform"
+        run: |
+          terraform init
+          terraform validate 
+          terraform plan
+          terraform apply
+          terraform destroy
