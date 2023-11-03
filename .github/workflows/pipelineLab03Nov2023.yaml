@@ -42,3 +42,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.YEMALABNOV2023AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
+      - name: "Cargar imagen ECR"
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n3j7o1e0
+          docker tag yemaecr:latest public.ecr.aws/n3j7o1e0/yemaecr:latest
+          docker push public.ecr.aws/n3j7o1e0/$IMAGE_NAME:latest
