@@ -44,10 +44,17 @@ jobs:
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n3j7o1e0
           docker tag $IMAGE_NAME public.ecr.aws/n3j7o1e0/yemaecr:latest
           docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
-      
+
       - name: "Aprovisionamiento de terraform"
         run: |
+          cd terraformAws
           terraform init
           terraform validate 
           terraform plan
           terraform apply
+          terraform destroy
+        
+      - name: "Ejecutar Ansible"
+        run: |
+          cd ansibleAws
+          ansible-playbook -i inventario serverAws.yml --become
