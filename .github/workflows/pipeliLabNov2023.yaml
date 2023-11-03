@@ -56,7 +56,10 @@ jobs:
           terraform plan -out tfplan
           terraform apply tfplan
           terraform output -json My_ip > ip_output.json
-          jq -r '.ips[].ip' ip_output.json > ips.txt 
+          jq -r '.ips[].ip' ip_output.json > ips.txt
+          cat ips.txt
+          ip=$(cat ips.txt)
+
 
       - name: "Ejecutar Ansible"
         run: |
