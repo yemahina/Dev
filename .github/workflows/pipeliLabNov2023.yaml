@@ -56,7 +56,6 @@ jobs:
           terraform plan -out tfplan
           terraform apply tfplan
         
-        
       - name: "Ejecutar Ansible"
         run: |
           cd ansibleAws
