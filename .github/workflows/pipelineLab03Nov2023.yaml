@@ -42,15 +42,3 @@ jobs:
           aws-secret-access-key: ${{ secrets.YEMALABNOV2023AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
 
-      - name: Read secrets from AWS Secrets Manager into environment variables
-        uses: abhilash1in/aws-secrets-manager-action@v2.1.0
-        with:
-          secrets: |
-            "$YEMALABNOV2023AWS_ACCESS_KEY_ID"
-            "$YEMALABNOV2023AWS_SECRET_ACCESS_KEY"
-          parse-json: true
-
-      - name: Check if env variable is set after fetching secrets
-        run: if [ -z ${MY_SECRET_1+x} ]; then echo "MY_SECRET_1 is unset"; else echo "MY_SECRET_1 is set to '$MY_SECRET_1'"; fi
-        
-
