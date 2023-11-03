@@ -61,3 +61,10 @@ jobs:
         run: |
           cd ansibleAws
           ansible-playbook -i inventario serverAws.yml --become
+
+      - name: "Destrucción"
+        run: |
+          cd terraformAws
+          terraform plan -destroy -out tfplan
+          terraform apply tfplan
+          terraform destroy

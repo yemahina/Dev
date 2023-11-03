@@ -50,11 +50,17 @@ jobs:
           cd terraformAws
           terraform init
           terraform validate 
-          terraform plan
-          terraform apply
-          terraform destroy
+          terraform plan -out tfplan
+          terraform apply tfplan
         
       - name: "Ejecutar Ansible"
         run: |
           cd ansibleAws
           ansible-playbook -i inventario serverAws.yml --become
+
+      - name: "Destrucción"
+        run: |
+          cd terraformAws
+          terraform plan -destroy -out tfplan
+          terraform apply tfplan
+          terraform destroy
