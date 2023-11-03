@@ -50,12 +50,14 @@ jobs:
 
       - name: "Aprovisionamiento de terraform"
         run: |
+          cd terraformAws
           terraform init
           terraform validate 
           terraform plan
           terraform apply
           terraform destroy
         
-      - name: "Aprovisionamiento de terraform"
+      - name: "Ejecutar Ansible"
         run: |
-          ansible-playbook -i inventario server.yml --become
+          cd ansibleAws
+          ansible-playbook -i inventario serverAws.yml --become
