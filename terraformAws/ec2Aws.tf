@@ -1,4 +1,3 @@
-  GNU nano 7.2                                                                                                                          ec2.tf                                                                                                                                    
 
 provider "aws" {
   region = "us-east-2"
