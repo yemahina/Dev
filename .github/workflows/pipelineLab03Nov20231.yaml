@@ -52,11 +52,13 @@ jobs:
           terraform validate 
           terraform plan -out tfplan
           terraform apply tfplan
+        continue-on-error: true
         
       - name: "Ejecutar Ansible"
         run: |
           cd ansibleAws1
           ansible-playbook -i inventario serverAws.yml --become
+          cat /terraformAws/inventario
 
       - name: "Instalar Arachni"
         run: |
