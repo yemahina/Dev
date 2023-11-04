@@ -62,6 +62,7 @@ jobs:
           cat ips.txt
           ip=$(cat ips.txt)
           sed -i "s/IP/$ip/g" ../ansibleAws/inventario
+        continue-on-error: true
 
 
       - name: "Ejecutar Ansible"
@@ -75,6 +76,7 @@ jobs:
           sudo chmod 600 $HOME/key.pem
           export ANSIBLE_HOST_KEY_CHECKING=False
           ansible-playbook -i inventario serverAws.yml --become
+        continue-on-error: true
 
       - name: "Lanzar DAST Instalar Arachni"
         run: |
