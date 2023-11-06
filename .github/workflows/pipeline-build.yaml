@@ -8,6 +8,10 @@ on:
 jobs:
   integration:
     runs-on: ubuntu-latest # Se ejecutará en una máquina virtual con Ubuntu
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
    
 
     steps:
@@ -47,13 +51,6 @@ jobs:
       - name: "Horusec - SAST"
         run:  horusec start -p="./"     
     
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.YEMALABNOV2023AWS_ACCESS_KEY_ID}}
-          aws-secret-access-key: ${{ secrets.YEMALABNOV2023AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
-
       - name: "Generación de imagen de docker, crear y ejecutar docker, carga de imagen ECR"
         run: |
           IMAGE_NAME="docker.io/my-organization/my-app:${{ github.sha }}"
@@ -61,9 +58,9 @@ jobs:
           echo "Image Reference: $IMAGE_NAME"
           docker tag $IMAGE_NAME public.ecr.aws/n3j7o1e0/yemaecr:latest
           docker images
-          echo "ECR"
-          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n3j7o1e0
-          docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
+#          echo "ECR"
+#          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n3j7o1e0
+#          docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
 
 #      - name: "Generación de imagen de docker, crear y ejecutar contenedor Docker"
  #       run: |
@@ -101,30 +98,30 @@ jobs:
           soft_fail: true  
         continue-on-error: true   
 
-      - name: "Aprovisianamiento con terraform"
-        run: |
-          cd Terraform
-          terraform init
-          terraform plan -out tfplan
-          terraform apply tfplan >> results_tfplan.txt
-          ip_webgoat=$(cat results_tfplan.txt | grep "My_ip = " | awk '{ print $3 }' | sed 's/"//g')
-          sed -i "s/IP/$ip_webgoat/g" ../Ansible/inventario  
-        continue-on-error: true  
+#      - name: "Aprovisianamiento con terraform"
+#        run: |
+#          cd Terraform
+#          terraform init
+#          terraform plan -out tfplan
+#          terraform apply tfplan >> results_tfplan.txt
+#          ip_webgoat=$(cat results_tfplan.txt | grep "My_ip = " | awk '{ print $3 }' | sed 's/"//g')
+#          sed -i "s/IP/$ip_webgoat/g" ../Ansible/inventario  
+#        continue-on-error: true  
 
-      - name: "Ansible"
-        env:
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-        run: |
-          sudo apt update
-          sudo apt install -y ansible
-          cd Ansible
-          echo "$PRIVATE_KEY" >> $HOME/key.pem
-          sudo chmod 600 $HOME/key.pem
-          export ANSIBLE_HOST_KEY_CHECKING=False
-          ansible-playbook -i inventario server.yml --become --private-key $HOME/key.pem
-          echo "Up server..."
-          sleep 45
-        continue-on-error: true 
+#      - name: "Ansible"
+#        env:
+#          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+#        run: |
+#          sudo apt update
+##          sudo apt install -y ansible
+#          cd Ansible
+#          echo "$PRIVATE_KEY" >> $HOME/key.pem
+#          sudo chmod 600 $HOME/key.pem
+#          export ANSIBLE_HOST_KEY_CHECKING=False
+#          ansible-playbook -i inventario server.yml --become --private-key $HOME/key.pem
+#          echo "Up server..."
+#         sleep 45
+#        continue-on-error: true 
 
       - name: "Ejecutar escáner de vulnerabilidades Trivy"
         uses: aquasecurity/trivy-action@master
