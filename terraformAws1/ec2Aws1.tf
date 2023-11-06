@@ -9,7 +9,7 @@ resource "aws_instance" "my_instanceY" {
   instance_type = "t2.micro"
   key_name      = "yema"
   tags = {
-    Name = "yema_Instance"
+    Name = "yema_InstanceY"
   }
 
   security_groups = [aws_security_group.my_security_groupY.id]

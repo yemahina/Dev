@@ -67,7 +67,7 @@ jobs:
        #   echo "empieza ips"
        #   cat ips.txt
        #   ip=$(cat ips.txt)
-       #   sed -i "s/IP/$ip/g" ../ansibleAws/inventario
+          sed -i "s/IP/$ip/g" ../ansibleAws/inventario
         continue-on-error: true
 
 
