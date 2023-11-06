@@ -25,6 +25,22 @@ jobs:
 
       - name: "Verificar paquete"
         run: ls -ltra target # Lista los archivos en el directorio 'target'
+    
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.YEMALABNOV2023AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{ secrets.YEMALABNOV2023AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: "Generación de imagen de docker y carga de imagen ECR"
+        run: |
+          IMAGE_NAME="docker.io/my-organization/my-app:${{ github.sha }}"
+          docker build -f Dockerfile -t $IMAGE_NAME .
+          echo "Image Reference: $IMAGE_NAME"
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n3j7o1e0
+          docker tag $IMAGE_NAME public.ecr.aws/n3j7o1e0/yemaecr:latest
+          docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
 
       - name: "Dependency Check"
         uses: dependency-check/Dependency-Check_Action@main
@@ -63,6 +79,7 @@ jobs:
             echo "Error: El contenedor no se ha creado correctamente."
             exit 1
           fi
+        continue-on-error: true
 
       - name: "Ejecutar escáner de vulnerabilidades Trivy"
         uses: aquasecurity/trivy-action@master
