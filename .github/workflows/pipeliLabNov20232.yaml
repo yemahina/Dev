@@ -48,6 +48,7 @@ jobs:
           docker tag webgoat:latest public.ecr.aws/n3j7o1e0/yemaecr:latest
           docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
 
+
       - name: "Aprovisionamiento de terraform"
         run: |
           cd terraformAws
@@ -59,6 +60,8 @@ jobs:
           apt-get install jq
           terraform show -json tfplan.binary | jq > tfplan.json
           echo "termina terraform."
+          sed -i "s/IP/$ip/g" ../ansibleAws/inventario
+        continue-on-error: true
        #   terraform output -json My_ip > ip_output.json
        #   jq -r '.ips[].ip' ip_output.json > ips.txt
        #   echo "aqui empieza output"
@@ -66,8 +69,7 @@ jobs:
        #   echo "empieza ips"
        #   cat ips.txt
        #   ip=$(cat ips.txt)
-          sed -i "s/IP/$ip/g" ../ansibleAws/inventario
-        continue-on-error: true
+
 
 
       - name: "Ejecutar Ansible"
