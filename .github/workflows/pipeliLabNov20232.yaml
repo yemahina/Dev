@@ -48,6 +48,14 @@ jobs:
           docker tag webgoat:latest public.ecr.aws/n3j7o1e0/yemaecr:latest
           docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
 
+      - name: "Checkov"
+        run: |
+          sudo apt update
+          sudo apt install checkov
+          cd terraform
+          terraform plan -out tfplan
+          terraform show -json tfplan | jq > tfplan.json
+        continue-on-error: true
 
       - name: "Aprovisionamiento de terraform"
         run: |
