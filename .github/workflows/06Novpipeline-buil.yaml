@@ -1,4 +1,4 @@
-name: GOAT Compile Uno
+name: GOAT Compile uno
  
 on:
   push:
@@ -49,17 +49,16 @@ jobs:
  
       - name: "Horusec -SAST"
         run: horusec start -p="./"
-
-      - name: "Generación de imagen de docker"
+ 
+      - name: "Imagen Docker"
         run: |
-          IMAGE_NAME="docker.io/my-organization/my-app:${{ github.sha }}"
-          docker build -f Dockerfile -t $IMAGE_NAME .
-          echo "Image Reference: $IMAGE_NAME"
+          docker build -f Dockerfile . -t webgoat/test
+          docker images
  
       - name: "Run Trivy vulnerability scanner"
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ steps.integration.outputs.image_name }}
+          image-ref: 'webgoat/test'
           timeout: 10m0s
           exit-code: '1'
           severity: 'CRITICAL,HIGH'
@@ -73,7 +72,6 @@ jobs:
         with:
           sarif_file: 'trivy-results.sarif'
           category: 'code'
-        continue-on-error: true
  
       - name: "Contenedor"
         run: docker run -d -p 8080:80 --name cod webgoat/test
@@ -90,7 +88,7 @@ jobs:
           tar -xvf arachni-1.6.1.3-0.6.1.1-linux-x86_64.tar.gz
  
       - name: "Finding IP"
-        run: ip_var=$(docker inspect ${{ steps.integration.outputs.image_name }} | grep "IPAddress" | tail -1 | cut -d ',' -f 4)
+        run: ip_var=$(docker inspect webgoat/test | grep "IPAddress" | tail -1 | cut -d ',' -f 4)
  
       - name: "Executing Arachni"
         run: ./arachni-1.6.1.3-0.6.1.1/bin/arachni --check=* http://$ip_var:8080/WebGoat/login
