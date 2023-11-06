@@ -47,15 +47,13 @@ jobs:
       - name: "Horusec - SAST"
         run:  horusec start -p="./"
 
-      - name: "Generación de imagen de docker"
+      - name: "Generación de imagen de docker, crear y ejecutar contenedor Docker"
         run: |
           IMAGE_NAME="docker.io/my-organization/my-app:${{ github.sha }}"
           docker build -f Dockerfile -t $IMAGE_NAME .
           echo "Image Reference: $IMAGE_NAME"
-      
-      - name: "Crear y ejecutar contenedor Docker"
-        run: docker run -d -p 8080:80 $IMAGE_NAME
-              
+          docker run -d -p 8080:80 $IMAGE_NAME
+
       - name: "Ejecutar escáner de vulnerabilidades Trivy"
         uses: aquasecurity/trivy-action@master
         with:
