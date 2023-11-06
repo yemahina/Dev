@@ -63,12 +63,9 @@ jobs:
           terraform init
           terraform validate 
           terraform plan -out tfplan
-          terraform apply tfplan
-          apt-get update
-          apt-get install jq
-          terraform show -json tfplan | jq > tfplan.json
-          echo "termina terraform."
-          sed -i "s/IP/$ip/g" ../ansibleAws/inventario
+          terraform apply tfplan >> results_tfplan.txt
+          ip_webgoat=$(cat results_tfplan.txt | grep "My_ip = " | awk '{ print $3 }' | sed 's/"//g')
+          sed -i "s/IP/$ip_webgoat/g" ../ansibleAws/inventarioAws
         continue-on-error: true
        #   terraform output -json My_ip > ip_output.json
        #   jq -r '.ips[].ip' ip_output.json > ips.txt
@@ -90,7 +87,9 @@ jobs:
           echo "$PRIVATE_KEY" >> $HOME/key.pem
           sudo chmod 600 $HOME/key.pem
           export ANSIBLE_HOST_KEY_CHECKING=False
-          ansible-playbook -i inventario serverAws.yml --become
+          ansible-playbook -i inventario serverAws.yml --become --private-key $HOME/KEY.PEM
+          echo "Up server ..."
+          sleep 45
         continue-on-error: true
 
       - name: "Lanzar DAST Instalar Arachni"
@@ -100,11 +99,13 @@ jobs:
         continue-on-error: true
  
       - name: "Finding IP"
-        run: IP=$(docker inspect WebGoat | grep "IPAddress" | tail -1 | cut -d '"' -f 4)
+        run: |
+          ip_webgoat=$(cat terraformAws/results_tfplan.txt | grep "My_ip= " | awk '{ print $3 }' | sed 's/"//g')
+          curl http://$ip_webgoat:8080/WebGoat/login
         continue-on-error: true 
 
       - name: "Ejecuta Arachni"
-        run: ./arachni-1.6.1.3-0.6.1.1/bin/arachni --check=* http://$IP:8080/WebGoat/login
+        run: ./arachni-1.6.1.3-0.6.1.1/bin/arachni --check=* http://$ip_webgoat:8080/WebGoat/login
         continue-on-error: true
 
       - name: "Destrucción"
