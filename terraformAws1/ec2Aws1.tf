@@ -26,15 +26,15 @@ resource "aws_security_group" "my_security_groupY" {
   vpc_id = "vpc-c2c3a2a9"
 
   ingress {
-    from_port   = 23
-    to_port     = 23
+    from_port   = 22
+    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port   = 8081
-    to_port     = 8081
+    from_port   = 8080
+    to_port     = 8080
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
