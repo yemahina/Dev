@@ -53,6 +53,9 @@ jobs:
           docker build -f Dockerfile -t $IMAGE_NAME .
           echo "Image Reference: $IMAGE_NAME"
       
+      - name: "Crear y ejecutar contenedor Docker"
+        run: docker run -d -p 8080:80 $IMAGE_NAME
+              
       - name: "Ejecutar escáner de vulnerabilidades Trivy"
         uses: aquasecurity/trivy-action@master
         with:
@@ -63,9 +66,6 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
         continue-on-error: true
-      
-      - name: "Crear y ejecutar contenedor Docker"
-        run: docker run -d -p 8080:80 $IMAGE_NAME
       
       - name: "Esperar a que el contenedor se inicie"
         run: sleep 10

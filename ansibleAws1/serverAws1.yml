@@ -50,13 +50,13 @@
 
     - name: Pull default Docker image
       community.docker.docker_image:
-        name: public.ecr.aws/n3j7o1e0/yemaecr:latest
+        name: public.ecr.aws/n3j7o1e0/yemaecr1:latest
         source: pull
 
     - name: Create default containers
       community.docker.docker_container:
         name: WebGoat
-        image: public.ecr.aws/n3j7o1e0/yemaecr:latest
+        image: public.ecr.aws/n3j7o1e0/yemaecr1:latest
         state: started
         ports: 
           - '8080:8080'
