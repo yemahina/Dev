@@ -25,22 +25,6 @@ jobs:
 
       - name: "Verificar paquete"
         run: ls -ltra target # Lista los archivos en el directorio 'target'
-    
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.YEMALABNOV2023AWS_ACCESS_KEY_ID}}
-          aws-secret-access-key: ${{ secrets.YEMALABNOV2023AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
-
-      - name: "Generación de imagen de docker y carga de imagen ECR"
-        run: |
-          IMAGE_NAME="docker.io/my-organization/my-app:${{ github.sha }}"
-          docker build -f Dockerfile -t $IMAGE_NAME .
-          echo "Image Reference: $IMAGE_NAME"
-          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n3j7o1e0
-          docker tag $IMAGE_NAME public.ecr.aws/n3j7o1e0/yemaecr:latest
-          docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
 
       - name: "Dependency Check"
         uses: dependency-check/Dependency-Check_Action@main
@@ -51,7 +35,7 @@ jobs:
           project: 'WebGoat'
           path: '.'
           format: 'HTML'
-          out: 'reports'
+          out: 'reports'   
 
       - name: "Verificar reporte"
         run: ls -ltra reports
@@ -61,14 +45,32 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest-beta
 
       - name: "Horusec - SAST"
-        run:  horusec start -p="./"
+        run:  horusec start -p="./"     
+    
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.YEMALABNOV2023AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{ secrets.YEMALABNOV2023AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
 
-      - name: "Generación de imagen de docker, crear y ejecutar contenedor Docker"
+      - name: "Generación de imagen de docker, crear y ejecutar docker, carga de imagen ECR"
         run: |
           IMAGE_NAME="docker.io/my-organization/my-app:${{ github.sha }}"
           docker build -f Dockerfile -t $IMAGE_NAME .
           echo "Image Reference: $IMAGE_NAME"
-          docker run -d -p 8080:80 $IMAGE_NAME
+          docker tag $IMAGE_NAME public.ecr.aws/n3j7o1e0/yemaecr:latest
+          docker images
+          echo "ECR"
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n3j7o1e0
+          docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
+
+#      - name: "Generación de imagen de docker, crear y ejecutar contenedor Docker"
+ #       run: |
+ #         IMAGE_NAME="docker.io/my-organization/my-app:${{ github.sha }}"
+ #         docker build -f Dockerfile -t $IMAGE_NAME .
+ #         echo "Image Reference: $IMAGE_NAME"
+ #         docker run -d -p 8080:80 $IMAGE_NAME
 
       - name: "Verificar estado del contenedor"
         run: docker ps | grep $IMAGE_NAME
@@ -80,6 +82,24 @@ jobs:
             exit 1
           fi
         continue-on-error: true
+
+      - name: "Scan Infra: Checkov"
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          output_format: cli,sarif
+          output_file_path: console,results.sarif
+          directory: Terraform
+          framework: terraform
+          soft_fail: true    
+
+      - name: "Aprovisianamiento con terraform"
+        run: |
+          cd Terraform
+          terraform init
+          terraform plan -out tfplan
+          terraform apply tfplan >> results_tfplan.txt
+          ip_webgoat=$(cat results_tfplan.txt | grep "My_ip = " | awk '{ print $3 }' | sed 's/"//g')
+          sed -i "s/IP/$ip_webgoat/g" ../Ansible/inventario    
 
       - name: "Ejecutar escáner de vulnerabilidades Trivy"
         uses: aquasecurity/trivy-action@master
