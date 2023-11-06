@@ -73,6 +73,7 @@ jobs:
         with:
           sarif_file: 'trivy-results.sarif'
           category: 'code'
+        continue-on-error: true
  
       - name: "Contenedor"
         run: docker run -d -p 8080:80 --name cod webgoat/test
