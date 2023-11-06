@@ -51,7 +51,7 @@ jobs:
           terraform init
           terraform validate 
           terraform plan -out tfplan
-          terraform apply tfplan
+          terraform apply -out tfplan
         continue-on-error: true
         
       - name: "Ejecutar Ansible"
