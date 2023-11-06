@@ -56,7 +56,7 @@
     - name: Create default containers
       community.docker.docker_container:
         name: WebGoat
-        image: public.ecr.aws/w2x5h8r5/demo1
+        image: public.ecr.aws/n3j7o1e0/yemaecr:latest
         state: started
         ports: 
           - '8080:8080'
