@@ -58,7 +58,7 @@ jobs:
           terraform apply tfplan
           apt-get update
           apt-get install jq
-          terraform show -json tfplan.binary | jq > tfplan.json
+          terraform show -json tfplan | jq > tfplan.json
           echo "termina terraform."
           sed -i "s/IP/$ip/g" ../ansibleAws/inventario
         continue-on-error: true

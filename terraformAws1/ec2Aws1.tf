@@ -16,7 +16,7 @@ resource "aws_instance" "my_instanceY" {
   subnet_id = "subnet-04ce466f"
 }
 
-output "My_ip"{
+output "My_ip1"{
         value = aws_instance.my_instanceY.public_ip
 }
 
