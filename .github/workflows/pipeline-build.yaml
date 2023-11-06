@@ -74,6 +74,7 @@ jobs:
 
       - name: "Verificar estado del contenedor"
         run: docker ps | grep $IMAGE_NAME
+        continue-on-error: true
 
       - name: "Manejo de errores si el contenedor no se encuentra"
         run: |
