@@ -47,7 +47,7 @@ jobs:
 
       - name: "Aprovisionamiento de terraform"
         run: |
-          cd terraformAws
+          cd terraformAws1
           terraform init
           terraform validate 
           terraform plan -out tfplan
