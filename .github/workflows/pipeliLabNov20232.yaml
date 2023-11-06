@@ -59,8 +59,10 @@ jobs:
           sudo apt-get install jq
           terraform output -json My_ip > ip_output.json
           jq -r '.ips[].ip' ip_output.json > ips.txt
+          echo "aqui empieza output"
+          cat ip_output.json
+          echo "empieza ips"
           cat ips.txt
-          echo "hola"
           ip=$(cat ips.txt)
           sed -i "s/IP/$ip/g" ../ansibleAws/inventario
         continue-on-error: true
