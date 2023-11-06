@@ -93,7 +93,7 @@ jobs:
         with:
           output_format: cli,sarif
           output_file_path: console,results.sarif
-          directory: Terraform
+          directory: terraformAWS
           framework: terraform
           soft_fail: true  
         continue-on-error: true   
