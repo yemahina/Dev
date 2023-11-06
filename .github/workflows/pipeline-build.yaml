@@ -137,12 +137,13 @@ jobs:
       - name: Run static analysis
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'fs'
-          security-checks: 'vuln,secret,config'
-          ignore-unfixed: true
-          format: 'sarif'
+          image-ref: 
+          timeout: 10m0s
+          exit-code: '1'
+          severity: 'CRITICAL, HIGH'
+          scanners: 'vuln,secret,config'
+          format: 'SARIF'
           output: 'trivy-results.sarif'
-          severity: 'CRITICAL'
 
 
       - name: Upload Trivy scan results to GitHub Security tab
