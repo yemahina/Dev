@@ -151,7 +151,7 @@ jobs:
         with:
           sarif_file: 'trivy-results.sarif'
           category: 'code'
-      
+        continue-on-error: true
 
       - name: "Instalar Arachni"
         run: |
@@ -160,7 +160,7 @@ jobs:
  
       - name: "Finding IP"
         run: |
-          ip_webgoat=$(cat Terraform/results_tfplan.txt | grep "My_ip = " | awk '{ print $3 }' | sed 's/"//g')
+          ip_var=$(cat Terraform/results_tfplan.txt | grep "My_ip = " | awk '{ print $3 }' | sed 's/"//g')
           curl http://$ip_webgoat:8080/WebGoat/login
  
       - name: "Ejecuta Arachni"
