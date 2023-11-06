@@ -1,0 +1,6 @@
+[aws]
+mi_ip_yem
+
+[all:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=${{ secrets.YEMALABNOV2023AWS_PEM }}

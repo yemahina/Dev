@@ -57,8 +57,8 @@ jobs:
       - name: "Ejecutar Ansible"
         run: |
           cd ansibleAws1
-          ansible-playbook -i inventario serverAws.yml --become
-          cat /terraformAws/inventario
+          ansible-playbook -i inventario1 serverAws.yml --become
+          cat /terraformAws1/inventario1
         continue-on-error: true
 
       - name: "Instalar Arachni"
