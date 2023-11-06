@@ -68,7 +68,9 @@ jobs:
         continue-on-error: true
  
       - name: "Finding IP"
-        run: IP=$(docker inspect WebGoat | grep "IPAddress" | tail -1 | cut -d '"' -f 4)
+        run: |
+          IP=$(docker inspect WebGoat | grep "IPAddress" | tail -1 | cut -d '"' -f 4)
+          cat WebGoat
         continue-on-error: true 
 
       - name: "Ejecuta Arachni"
