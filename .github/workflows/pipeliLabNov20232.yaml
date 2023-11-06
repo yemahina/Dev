@@ -59,7 +59,6 @@ jobs:
           apt-get install jq
           terraform show -json tfplan.binary | jq > tfplan.json
           echo "termina terraform."
-
        #   terraform output -json My_ip > ip_output.json
        #   jq -r '.ips[].ip' ip_output.json > ips.txt
        #   echo "aqui empieza output"
