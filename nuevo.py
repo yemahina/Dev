@@ -1,5 +1,7 @@
 import requests
 import json
+import argparse
+
 
 # with open('reporteT.json', 'r') as report_file:
 #     trivy_report = json.load(report_file)
@@ -7,51 +9,51 @@ import json
 url_api = "http://18.218.244.166:8080/api/v2/{method}"
 api_key = "Token edaf1740e048924e2f817fb6436a803b690c6900"
 
-def get_products():
-    headers = {
-        'accept': 'application/json',
-        'Authorization': api_key
-    }
+# def get_products():
+#     headers = {
+#         'accept': 'application/json',
+#         'Authorization': api_key
+#     }
     
-    gp = requests.get(url_api.format(method='products'), headers=headers, verify=False)
+#     gp = requests.get(url_api.format(method='products'), headers=headers, verify=False)
     
-    if gp.status_code == 200:
-        print(json.dumps(gp.json(), indent=4))
-        print("Create product con éxito.")
+#     if gp.status_code == 200:
+#         print(json.dumps(gp.json(), indent=4))
+#         print("Create product con éxito.")
 
-def create_product():
-    headers = {
-        'accept' : 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization' : api_key 
-    }
+# def create_product():
+#     headers = {
+#         'accept' : 'application/json',
+#         'Content-Type': 'application/json',
+#         'Authorization' : api_key 
+#     }
     
-    body = {
-         "tags": [
-             ""
-        ],    
-        "name": "ProductFG",
-        "description": "Demo",
-        "prod_numeric_grade": 2147483647,
-        "business_criticality": "very high",
-        "platform": "web service",
-        "lifecycle": "construction",
-        "origin": "third party library",
-        "user_records": 2147483647,
-        "revenue": "04652832.",
-        "external_audience": True,
-        "internet_accessible": True
-    }
+#     body = {
+#          "tags": [
+#              ""
+#         ],    
+#         "name": "ProductFG",
+#         "description": "Demo",
+#         "prod_numeric_grade": 2147483647,
+#         "business_criticality": "very high",
+#         "platform": "web service",
+#         "lifecycle": "construction",
+#         "origin": "third party library",
+#         "user_records": 2147483647,
+#         "revenue": "04652832.",
+#         "external_audience": True,
+#         "internet_accessible": True
+#     }
 
-    cp = requests.post(url_api.format(method='products'), headers = headers, json = body, verify = False)
+#     cp = requests.post(url_api.format(method='products'), headers = headers, json = body, verify = False)
     
-    print(cp.status_code)
+#     print(cp.status_code)
     
-    if cp.status_code == 201:
-        print(json.dumps(cp.json(), indent=4))
-        print("Create product con éxito.")
+#     if cp.status_code == 201:
+#         print(json.dumps(cp.json(), indent=4))
+#         print("Create product con éxito.")
 
-def upload():
+def upload(file_report, type_scan):
     headers = {
         'Authorization': api_key,
         'accept': 'application/json'
@@ -62,16 +64,16 @@ def upload():
     #     files = {'report': ('reporteT.json', report)}
 
     report = {
-        'file' : open('reporteT.json','rb')
+        'file' : open(file_report,'rb')
     }
 
     body = {
         'product_name': 'WebGoat',
-        'engagement_name': 'prueba',
+        'engagement_name': 'yemahina',
         'product_type_name': 'Research and Development',
         'active': True,
         'verified': True,
-        'scan_type': 'Trivy Scan',
+        'scan_type': type_scan,
         'minimum_severity' : 'Info',
         'close_old_findings': False,
         'test_title': 'yo'
@@ -85,6 +87,10 @@ def upload():
         print("Archivo 'reporte.json' subido con éxito.")
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--file', '-f', dest='file',help='Nombre del Reporte', required=True)
+    parser.add_argument('--type-scan', '-t', dest='type_scan',help='Nombre del escaner', required=True)
+    args = parser.parse_args()
     # get_products()  # Puedes llamar a esta función aquí si es necesario
     # create_product()
-    upload()
+    upload(args.file, args.type_scan)
