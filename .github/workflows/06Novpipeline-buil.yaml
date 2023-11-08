@@ -51,7 +51,7 @@ jobs:
       - name: "Reporte dependecy check"
         run: |
           cd reports/
-          python3 nuevo.py -f dependency-check-report.xml -t "Trivy Scan"
+          python3 nuevo.py -f dependency-check-report.xml -t "Dependency check"
         
       # - name: "Upload SARIF report"
       #   uses: github/codeql-action/upload-sarif@v2
