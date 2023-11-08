@@ -1,33 +1,33 @@
-name:  Compile image docker
+# name:  Compile image docker
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Pull PHP image
-        run: sudo docker pull php:8.2-cli
+#     steps:
+#       - name: Pull PHP image
+#         run: sudo docker pull php:8.2-cli
 
-      - name: Create Dockerfile
-        run: |
-          echo "FROM php:7.0-apache" > Dockerfile
-          ls -l
-          echo "COPY ./code /var/www/html" >> Dockerfile
-          echo "EXPOSE 80" >> Dockerfile
+#       - name: Create Dockerfile
+#         run: |
+#           echo "FROM php:7.0-apache" > Dockerfile
+#           ls -l
+#           echo "COPY ./code /var/www/html" >> Dockerfile
+#           echo "EXPOSE 80" >> Dockerfile
 
-      - name: busca Dockerfile
-        run: find . -name Dockerfile
+#       - name: busca Dockerfile
+#         run: find . -name Dockerfile
 
-      - name: copy code into image
-        run: sudo docker build -t prueba -f $(find . -name Dockerfile) .
+#       - name: copy code into image
+#         run: sudo docker build -t prueba -f $(find . -name Dockerfile) .
 
-      - name: list Docker images
-        run: sudo docker images
+#       - name: list Docker images
+#         run: sudo docker images
 
 
 

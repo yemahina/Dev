@@ -1,120 +1,120 @@
-name: labs03Nov20232
+# name: labs03Nov20232
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  integration:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
+# jobs:
+#   integration:
+#     runs-on: ubuntu-latest
+#     permissions:
+#       security-events: write
+#       actions: read
+#       contents: read
 
-    steps:
-      - name: "Obteniendo ultima version del codigo"
-        uses: actions/checkout@v3
+#     steps:
+#       - name: "Obteniendo ultima version del codigo"
+#         uses: actions/checkout@v3
 
-      - name: "Instalacion Java"
-        uses: actions/setup-java@v3
-        with:
-          distribution: "temurin"
-          java-version: "17"
+#       - name: "Instalacion Java"
+#         uses: actions/setup-java@v3
+#         with:
+#           distribution: "temurin"
+#           java-version: "17"
 
-      - name: "Compilacion"
-        run: ./mvnw clean install
+#       - name: "Compilacion"
+#         run: ./mvnw clean install
 
-      - name: "Verificar paquete"
-        run: ls -ltra target
+#       - name: "Verificar paquete"
+#         run: ls -ltra target
       
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.YEMALABNOV2023AWS_ACCESS_KEY_ID}}
-          aws-secret-access-key: ${{ secrets.YEMALABNOV2023AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-2
+#       - name: Configure AWS Credentials
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:
+#           aws-access-key-id: ${{ secrets.YEMALABNOV2023AWS_ACCESS_KEY_ID}}
+#           aws-secret-access-key: ${{ secrets.YEMALABNOV2023AWS_SECRET_ACCESS_KEY }}
+#           aws-region: us-east-2
 
-      - name: "Generación de imagen de docker"
-        run: |
-          docker build -f Dockerfile . -t webgoat
-          docker images
+#       - name: "Generación de imagen de docker"
+#         run: |
+#           docker build -f Dockerfile . -t webgoat
+#           docker images
  
 
-      - name: "Cargar imagen ECR"
-        run: |
-          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n3j7o1e0
-          docker tag webgoat:latest public.ecr.aws/n3j7o1e0/yemaecr:latest
-          docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
+#       - name: "Cargar imagen ECR"
+#         run: |
+#           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n3j7o1e0
+#           docker tag webgoat:latest public.ecr.aws/n3j7o1e0/yemaecr:latest
+#           docker push public.ecr.aws/n3j7o1e0/yemaecr:latest
 
-      - name: "Checkov"
-        run: |
-          sudo apt update
-          sudo apt install checkov
-          cd terraform
-          terraform plan -out tfplan
-          terraform show -json tfplan | jq > tfplan.json
-        continue-on-error: true
+#       - name: "Checkov"
+#         run: |
+#           sudo apt update
+#           sudo apt install checkov
+#           cd terraform
+#           terraform plan -out tfplan
+#           terraform show -json tfplan | jq > tfplan.json
+#         continue-on-error: true
 
-      - name: "Aprovisionamiento de terraform"
-        run: |
-          cd terraformAws
-          terraform init
-          terraform validate 
-          terraform plan -out tfplan
-          terraform apply tfplan >> results_tfplan.txt
-          ip_webgoat=$(cat results_tfplan.txt | grep "My_ip = " | awk '{ print $3 }' | sed 's/"//g')
-          sed -i "s/IP/$ip_webgoat/g" ../ansibleAws/inventarioAws
-        continue-on-error: true
-       #   terraform output -json My_ip > ip_output.json
-       #   jq -r '.ips[].ip' ip_output.json > ips.txt
-       #   echo "aqui empieza output"
-       #   cat ip_output.json
-       #   echo "empieza ips"
-       #   cat ips.txt
-       #   ip=$(cat ips.txt)
+#       - name: "Aprovisionamiento de terraform"
+#         run: |
+#           cd terraformAws
+#           terraform init
+#           terraform validate 
+#           terraform plan -out tfplan
+#           terraform apply tfplan >> results_tfplan.txt
+#           ip_webgoat=$(cat results_tfplan.txt | grep "My_ip = " | awk '{ print $3 }' | sed 's/"//g')
+#           sed -i "s/IP/$ip_webgoat/g" ../ansibleAws/inventarioAws
+#         continue-on-error: true
+#        #   terraform output -json My_ip > ip_output.json
+#        #   jq -r '.ips[].ip' ip_output.json > ips.txt
+#        #   echo "aqui empieza output"
+#        #   cat ip_output.json
+#        #   echo "empieza ips"
+#        #   cat ips.txt
+#        #   ip=$(cat ips.txt)
 
 
 
-      - name: "Ejecutar Ansible"
-        env:
-          PRIVATE_KEY: ${{ secrets.YEMALABNOV2023AWS_PEM }}
-        run: |
-          sudo apt update
-          sudo apt install -y ansible
-          cd ansibleAws
-          echo "$PRIVATE_KEY" >> $HOME/key.pem
-          sudo chmod 600 $HOME/key.pem
-          export ANSIBLE_HOST_KEY_CHECKING=False
-          ansible-playbook -i inventario serverAws.yml --become --private-key $HOME/KEY.PEM
-          echo "Up server ..."
-          sleep 45
-        continue-on-error: true
+#       - name: "Ejecutar Ansible"
+#         env:
+#           PRIVATE_KEY: ${{ secrets.YEMALABNOV2023AWS_PEM }}
+#         run: |
+#           sudo apt update
+#           sudo apt install -y ansible
+#           cd ansibleAws
+#           echo "$PRIVATE_KEY" >> $HOME/key.pem
+#           sudo chmod 600 $HOME/key.pem
+#           export ANSIBLE_HOST_KEY_CHECKING=False
+#           ansible-playbook -i inventario serverAws.yml --become --private-key $HOME/KEY.PEM
+#           echo "Up server ..."
+#           sleep 45
+#         continue-on-error: true
 
-      - name: "Lanzar DAST Instalar Arachni"
-        run: |
-          wget https://github.com/Arachni/arachni/releases/download/v1.6.1.3/arachni-1.6.1.3-0.6.1.1-linux-x86_64.tar.gz
-          tar -xvf arachni-1.6.1.3-0.6.1.1-linux-x86_64.tar.gz
-        continue-on-error: true
+#       - name: "Lanzar DAST Instalar Arachni"
+#         run: |
+#           wget https://github.com/Arachni/arachni/releases/download/v1.6.1.3/arachni-1.6.1.3-0.6.1.1-linux-x86_64.tar.gz
+#           tar -xvf arachni-1.6.1.3-0.6.1.1-linux-x86_64.tar.gz
+#         continue-on-error: true
  
-      - name: "Finding IP"
-        run: |
-          ip_webgoat=$(cat terraformAws/results_tfplan.txt | grep "My_ip= " | awk '{ print $3 }' | sed 's/"//g')
-          curl http://$ip_webgoat:8080/WebGoat/login
-        continue-on-error: true 
+#       - name: "Finding IP"
+#         run: |
+#           ip_webgoat=$(cat terraformAws/results_tfplan.txt | grep "My_ip= " | awk '{ print $3 }' | sed 's/"//g')
+#           curl http://$ip_webgoat:8080/WebGoat/login
+#         continue-on-error: true 
 
-      - name: "Ejecuta Arachni"
-        run: ./arachni-1.6.1.3-0.6.1.1/bin/arachni --check=* http://$ip_webgoat:8080/WebGoat/login
-        continue-on-error: true
+#       - name: "Ejecuta Arachni"
+#         run: ./arachni-1.6.1.3-0.6.1.1/bin/arachni --check=* http://$ip_webgoat:8080/WebGoat/login
+#         continue-on-error: true
 
-      - name: "Destrucción"
-        run: |
-          cd terraformAws
-          terraform plan -destroy -out tfplan
-          terraform apply tfplan
-          terraform destroy
-        continue-on-error: true
+#       - name: "Destrucción"
+#         run: |
+#           cd terraformAws
+#           terraform plan -destroy -out tfplan
+#           terraform apply tfplan
+#           terraform destroy
+#         continue-on-error: true
 
 
 
