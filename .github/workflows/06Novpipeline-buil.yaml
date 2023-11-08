@@ -52,11 +52,11 @@ jobs:
         run: |
           python3 nuevo.py -f reporteT.json -t "Trivy Scan"
         
-      - name: "Upload SARIF report"
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: ${{github.workspace}}/reports
-          checkout_path: ${{github.workspace}}/reports  
+      # - name: "Upload SARIF report"
+      #   uses: github/codeql-action/upload-sarif@v2
+      #   with:
+      #     sarif_file: ${{github.workspace}}/reports
+      #     checkout_path: ${{github.workspace}}/reports  
  
       - name: "Verificar reporte"
         run: ls -ltra reports
@@ -89,11 +89,11 @@ jobs:
         run: |
           python3 nuevo.py -f reporteT.json -t "Trivy Scan"
          
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: 'trivy-results.sarif'
-          category: 'code'
+      # - name: Upload Trivy scan results to GitHub Security tab
+      #   uses: github/codeql-action/upload-sarif@v2
+      #   with:
+      #     sarif_file: 'trivy-results.sarif'
+      #     category: 'code'
  
       - name: "Contenedor"
         run: docker run -d -p 8080:80 --name cod webgoat/test
@@ -104,10 +104,10 @@ jobs:
       - name: "Iniciar"
         run: docker container start cod
 
-      - name: "Reporte"
-        run: |
-          trivy -f json -o reporteTr.json webgoat/test 
-          python3 nuevo.py -f reporteT.json -t "Trivy Scan"
+      # - name: "Reporte"
+      #   run: |
+      #     trivy -f json -o reporteTr.json webgoat/test 
+      #     python3 nuevo.py -f reporteT.json -t "Trivy Scan"
  
       - name: "Installing Arachni"
         run: |
