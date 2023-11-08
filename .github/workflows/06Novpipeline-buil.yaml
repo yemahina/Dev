@@ -50,7 +50,8 @@ jobs:
 
       - name: "Reporte dependecy check"
         run: |
-          python3 nuevo.py -f reporteT.json -t "Trivy Scan"
+          cd reports/
+          python3 nuevo.py -f dependency-check-report.xml -t "Trivy Scan"
         
       # - name: "Upload SARIF report"
       #   uses: github/codeql-action/upload-sarif@v2
@@ -85,7 +86,7 @@ jobs:
           output: 'reporteTr.json'
         continue-on-error: true
 
-      - name: "Reporte"
+      - name: "Reporte trivy"
         run: |
           python3 nuevo.py -f reporteT.json -t "Trivy Scan"
          
