@@ -22,6 +22,14 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "17"
+
+      - name: "Instalar python"
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+
+      - name: "Instalar requests"
+        run: pip3 install requests
  
       - name: "Compilacion"
         run: ./mvnw clean install
@@ -37,8 +45,12 @@ jobs:
         with:
           project: 'WebGoat'
           path: '.'
-          format: 'SARIF'
+          format: 'XML'
           out: 'reports'
+
+      - name: "Reporte dependecy check"
+        run: |
+          python3 nuevo.py -f reporteT.json -t "Trivy Scan"
         
       - name: "Upload SARIF report"
         uses: github/codeql-action/upload-sarif@v2
