@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+      
+env: 
+  api_key_yem: ${{ secrets.API_KEY_YEM }}
  
 jobs:
   integration:
