@@ -87,6 +87,11 @@ jobs:
  
       - name: "Iniciar"
         run: docker container start cod
+
+      - name: "Reporte"
+        run: |
+          trivy -f json -o reporteTr.json webgoat/test 
+          python3 nuevo.py -f reporteT.json -t "Trivy Scan"
  
       - name: "Installing Arachni"
         run: |
@@ -103,4 +108,5 @@ jobs:
         run: |
           docker container stop cod
           docker container rm cod
-          
+
+      
