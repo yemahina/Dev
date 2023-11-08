@@ -50,7 +50,7 @@ jobs:
 
       - name: "Reporte dependecy check"
         run: |
-          python3 nuevo.py -f reports/dependency-check-report.xml -t "Dependency check"
+          python3 nuevo.py -f reports/dependency-check-report.xml -t "Dependency Check Scan"
         continue-on-error: true
         
       # - name: "Upload SARIF report"
